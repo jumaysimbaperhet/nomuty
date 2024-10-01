@@ -60,7 +60,7 @@ def Hwid():
     bot = telebot.TeleBot("7112104527:AAGxRzkLnRBn4xhpszPLO3w-IBNx8k8LUjM")
     sent = False
     while True:
-        url = "https://raw.githubusercontent.com/jumaysimbaperhet/nomuty/refs/heads/main/NOMETAPREMIUM/HWIDS?token=GHSAT0AAAAAACYJ2MZZFKKS6U2K2QPIR4SYZX4AXNA"
+        url = "https://raw.githubusercontent.com/jumaysimbaperhet/nomuty/refs/heads/main/NOMETAPREMIUM/HWIDS"
         hwid_list = requests.get(url).text.splitlines()
         if hwid.strip() in [line.strip() for line in hwid_list]:
             Write.Print("[OK] Вы прошли проверку, доступ разрешен!\n", Colors.green_to_white, interval=0.01)
