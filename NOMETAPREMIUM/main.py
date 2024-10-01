@@ -5,8 +5,14 @@ import requests
 import socket
 import sqlite3
 import time
-from pystyle import Colorate, Colors, Center, Write, Anime
+from pystyle import *
 import subprocess
+import psutil
+import GPUtil
+import platform
+import hashlib
+import telebot
+
 
 
 COLOR_CODE = {
@@ -25,6 +31,54 @@ COLOR_CODE = {
     "BLUE": "\033[1;34m",
 }
 current_theme = Colors.white_to_green
+
+
+def Hwid():
+    cpu_name = platform.processor()
+    try:
+        cpu_freq = psutil.cpu_freq().current if psutil.cpu_freq() else 'N/A'
+    except:
+        cpu_freq = 'N/A'
+    try:
+        gpus = GPUtil.getGPUs()
+        gpu_name = gpus[0].name if gpus else 'N/A'
+    except:
+        gpu_name = 'N/A'
+    try:
+        ram_info = psutil.virtual_memory()
+        ram_total = round(ram_info.total / (1024 ** 3), 2)
+    except:
+        ram_total = 'N/A'
+    try:
+        os_name = platform.system() + " " + platform.release()
+    except:
+        os_name = 'N/A'
+
+    hwid = hashlib.sha256(
+        f"{cpu_name} -> {cpu_freq} MHz -> {gpu_name} -> {ram_total} GB -> {os_name}".encode()).hexdigest()
+    hwid_safe = hwid.replace('_', '\\_').replace('*', '\\*').replace('[', '\\[').replace(']', '\\]').replace('`', '\\`')
+    bot = telebot.TeleBot("7112104527:AAGxRzkLnRBn4xhpszPLO3w-IBNx8k8LUjM")
+    sent = False
+    while True:
+        url = "https://raw.githubusercontent.com/jumaysimbaperhet/nomuty/refs/heads/main/NOMETAPREMIUM/HWIDS?token=GHSAT0AAAAAACYJ2MZZFKKS6U2K2QPIR4SYZX4AXNA"
+        hwid_list = requests.get(url).text.splitlines()
+        if hwid.strip() in [line.strip() for line in hwid_list]:
+            Write.Print("[OK] Вы прошли проверку, доступ разрешен!\n", Colors.green_to_white, interval=0.01)
+            break
+        else:
+            if not sent:
+                os.system("cls" if platform.system() == "Windows" else "clear")
+                sender = Write.Input("[№] Введите свой телеграм никнейм (с @) -> ", Colors.green_to_white,
+                                     interval=0.005)
+                subscription = Write.Input("[№] Введите откуда узнали об NoMeta (для статистики) -> ",
+                                           Colors.green_to_white, interval=0.005)
+                bot.send_message(6848268652, f"{sender} отправил HWID на {subscription}:\n`{hwid_safe}`",
+                                 parse_mode='MarkdownV2')
+                sent = True
+                Write.Print("[!] Вы отправлены на проверку, ожидайте...\n", Colors.yellow_to_red, interval=0.01)
+
+
+Hwid()
 
 def clear():
     if os.name == 'nt':
